@@ -1,0 +1,44 @@
+.main_forecast{
+    margin-top: 50px;
+    color: #fff;
+}
+.days{
+    width: 30%;
+}
+.list_days{
+    background-color: #3d3c3c9f;
+    border-radius: 30px;
+    padding: 10px;
+    margin-top: 10px;
+}
+.list_days ul li{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-bottom: 1px solid whitesmoke;
+  font-weight: 500;
+}
+
+.list_days ul li:last-child{
+    border-bottom: none;
+}
+
+
+
+.days{
+    font-size: 17px;
+    font-weight: 600;
+}
+.param_weath img{
+    margin: 0 auto;
+}
+.temp_avg{
+    display: flex;
+    column-gap: 5px;
+}
+
+.loading{
+    text-align: center;
+    margin-top: 90px;
+}

@@ -1,0 +1,646 @@
+import React from 'react'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { weatherConfig } from '../../data/weatherConfig'
+
+interface Weather {
+    id: number,
+    main: string,
+    description: string,
+    icon: string
+}
+
+interface WeatherProps {
+    base: string;
+    main: {
+        temp: number,
+        feels_like: number,
+        humidity: number, 
+        temp_max: number,
+        temp_min: number,
+    },
+    weather: Weather[],
+}
+
+
+const Weather = () => {
+    const {data, isLoading, isError, error } = useQuery<WeatherProps | null, Error>({
+        queryKey: ['weatherData',],
+        queryFn: async () => {
+          const { data } = await axios.get(
+            https://api.openweathermap.org/data/2.5/weather?lat=${weatherConfig.lat}&lon=${weatherConfig.lon}&appid=${weatherConfig.apiKey}&units=metric&lang=vi
+          )
+          
+          return data;
+        }
+        
+        
+      })
+      console.log(data);
+     
+    
+    //   if (isLoading) return 'Loading...'
+    
+    //   if (error) return 'An error has occurred: ' + error.message
+      
+    const icon = https://openweathermap.org/img/wn/${data?.weather[0].icon}@2x.png;
+  return (
+    <div className='bg-slate-900 py-5'>
+    <div style={{maxWidth: 430, height: 600, overflowY: 'scroll'}} className="device_wrapper bg-white mx-auto rounded">
+      <h1>Weather</h1>
+      <div>
+        <img src={icon} alt="Weather Icon" />
+      </div>
+      <h2>{data?.main.temp.toFixed()} C</h2>
+      <p>{data?.weather[0].description}</p>
+    </div>
+  </div>
+  )
+}
+
+export default Weather; 
+
+
+
+
+
+////////axios////
+import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import axios from 'axios';
+import { weatherConfig } from '../../data/weatherConfig';
+import styles from './Weather.module.css';
+import { WiHumidity, WiStrongWind, WiThermometer } from 'react-icons/wi';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+
+interface WeatherProps {
+  location: {
+    name: string;
+    localtime: string;
+  };
+  current: {
+    temp_c: number;
+    condition: {
+      text: string;
+      icon: string;
+      code: number;
+    };
+  };
+  wind_kph: number;
+  humidity: number;
+  feelslike_c: number;
+  gust_kph: number;
+}
+
+const Weather = () => {
+  const [weathers, setWeathers] = useState<WeatherProps | null>(null);
+
+  useEffect(() => {
+    const fetchCurrentWeather = async () => {
+      try {
+        const { data } = await axios.get(
+          `https://api.weatherapi.com/v1/current.json?key=${weatherConfig.apiKey}&q=Danang&aqi=no&lang=vi`
+        );
+        console.log(data);
+        setWeathers(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCurrentWeather();
+  }, []);
+
+  const icon = weathers?.current.condition.icon
+    ? `https:${weathers.current.condition.icon}`
+    : '';
+  return (
+    <div className='bg-slate-900 py-5'>
+      <div
+        style={{ maxWidth: 430, height: 600, overflowY: 'scroll' }}
+        className='device_wrapper bg-white mx-auto rounded'
+      >
+        <h1>Weather</h1>
+        {icon && <img src={icon} alt='Weather Icon' />}
+        <h2>{weathers?.current.temp_c} &#8451;</h2>
+        <p>{weathers?.current.condition.text}</p>
+      </div>
+    </div>
+  );
+};
+
+export default Weather;
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////
+
+
+import React from 'react'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { weatherConfig } from '../../data/weatherConfig'
+import styles from './Weather.module.css'
+import {WiHumidity, WiStrongWind, WiThermometer} from 'react-icons/wi'
+import {FaMapMarkerAlt} from 'react-icons/fa'
+
+// interface Weather {
+//   id: number,
+//   main: string,
+//   description: string,
+//   icon: string
+// }
+
+// interface WeatherProps {
+//   base: string;
+//   main: {
+//     temp: number,
+//     feels_like: number,
+//     humidity: number,
+//     temp_max: number,
+//     temp_min: number,
+//   },
+//   weather: Weather[],
+// }
+// interface HourlyProps {
+//   timezone: string;
+//   daily: {
+//     temp: {
+//       day: number;
+//       night: number;
+//       eve: number;
+//       morn: number;
+//     };
+//     weather: {
+//       id: number;
+//       main: string;
+//       description: string;
+//       icon: string;
+//     }[];
+//   }[];
+// }
+
+
+// interface SearchWeatherProps {
+//   name: string;
+//   main:{
+//       temp: number;
+//       temp_min: number;
+//       humidity: number;
+//   }
+//   weather:{
+//     id: number;
+//     description: string;
+//     icon: string;
+//   }[];
+//   wind:{
+//     speed: number;
+//   }
+
+  
+
+// }
+
+
+const Weather = () => {
+  const [data, setData] = React.useState<SearchWeatherProps | null>(null);
+  const [location, setLocation] = React.useState('');
+
+  // const weatherQuery = useQuery<WeatherProps | null, Error>({
+  //   queryKey: ['weatherData',],
+  //   queryFn: async () => {
+  //     const { data } = await axios.get(
+  //       `https://api.openweathermap.org/data/2.5/weather?lat=${weatherConfig.lat}&lon=${weatherConfig.lon}&appid=${weatherConfig.apiKey}&units=metric&lang=vi`
+  //     );
+  //     return data;
+  //   }
+
+  // });
+  // console.log('Weather Query:', weatherQuery);
+
+  // const hourlyQuery = useQuery<HourlyProps | null, Error>({
+  //   queryKey: ['hourlyData',],
+  //   queryFn: async () => {
+  //     const { data } = await axios.get(
+  //       `https://api.openweathermap.org/data/2.5/onecall?lat=${weatherConfig.lat}&lon=${weatherConfig.lon}&exclude=current,minutely,hourly,alerts&appid=${weatherConfig.apiKey}&units=metric`
+  //     );
+  //     return data;
+  //   }
+  // });
+  // console.log('Hourly Query:', hourlyQuery);
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${weatherConfig.apiKey}&units=metric&lang=vi`;
+  const searchLocation = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      axios.get(url).then((response) => {
+        setData(response.data)
+        localStorage.setItem('latitude', response.data.coord.lat);
+        localStorage.setItem('longitude', response.data.coord.lon);
+        console.log(response.data)
+      })
+      setLocation('')
+    }
+  }
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+
+  const icon = `https://openweathermap.org/img/wn/${data?.weather[0].icon}@2x.png`;
+  // const iconhorly = `https://openweathermap.org/img/wn/${hourlyQuery.data?.daily[0].weather[0].icon}@2x.png`;
+  return (
+    <div className={styles.container}>
+     <div className={styles.scrollbar} id={styles.style_1}>
+      <div className={styles.force_overflow}></div>
+     <div className={styles.weather_wrapper}>
+        <div className={styles.header_item}>
+          <div className={styles.inpt_search}>
+            <div className="my-3">
+              <div className=" mb-4 flex justify-end w-full flex-wrap items-stretch">
+                {
+                  isSearchOpen && (
+                    <input
+                  type="text" value={location} onChange={(event) => setLocation(event.target.value)} onKeyPress={searchLocation}
+                  className=" m-0 block flex-auto rounded-2xl border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-black outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary  focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none bg-slate-100"
+                  placeholder="Enter Location..."
+                  aria-label="Search"
+                  aria-describedby="button-addon2" />
+                  )
+                }
+                
+                {/* <!--Search icon--> */}
+                <span onClick={() => {
+                  setIsSearchOpen(!isSearchOpen);
+                }}
+                  className={`${styles.search_icon} input-group-text  justify-end items-center whitespace-nowrap rounded px-2.5 py-2 ms-1 text-center text-lg font-semibold text-black  bg-white rounded-full cursor-pointer`}
+                  id="basic-addon2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="h-5 w-5">
+                    <path
+                      fillRule="evenodd"
+                      d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                      clipRule="evenodd" />
+                  </svg>
+                </span>
+               
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className={styles.body_item}>
+          <h2 className={`${styles.loca_name} flex`}><span className='my-1 me-1'><FaMapMarkerAlt/></span> {data?.name}</h2>
+
+          <div className={styles.content}>
+            <div className={styles.main_weath}>
+              <img src={icon} alt="" />
+
+              <div className={styles.main_param}>
+                <h2>{data?.main.temp.toFixed()}°</h2>
+                <p>{data?.weather[0].description}</p>
+              </div>
+            </div>
+            <div className={styles.child_weath}>
+              <ul>
+                <li>
+                  <span className='text-3xl'><WiThermometer/></span>
+                  <span>{data?.main.temp_min.toFixed()} °</span>
+                </li>
+                <li>
+                  <span className='text-3xl'><WiStrongWind/></span>
+                  <span>{data?.wind.speed} km/h</span>
+                </li>
+                <li>
+                  <span className='text-3xl'><WiHumidity/></span>
+                  <span>{data?.main.humidity}  %</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <div className={styles.footer_item}>
+          <h4>Thời tiết hôm nay</h4>
+          <ul className={styles.child_btm}>
+            <li>
+              <div className={styles.weath_thumb}>
+                <p>images</p>
+              </div>
+              <div className={styles.weath_time}>
+                <p>11h00</p>
+              </div>
+              <div className={styles.child_temp}>
+
+                <p>°</p>
+
+              </div>
+            </li>
+          </ul>
+          
+        </div>
+        <div className={styles.next_day}>
+          <button>Dự báo 5 ngày tới</button>
+        </div>
+      </div>
+     </div>
+    </div>
+  )
+}
+
+export default Weather;
+
+
+
+{/* <div className='bg-slate-900 py-5'>
+<div style={{maxWidth: 430, height: 600, overflowY: 'scroll'}} className="device_wrapper bg-white mx-auto rounded">
+  <h1>Weather</h1>
+  <div>
+    <img src={icon} alt="Weather Icon" />
+  </div>
+  <h2>{weatherQuery.data?.main.temp.toFixed()} C</h2>
+  <p>{weatherQuery.data?.weather[0].description}</p>
+
+  <div>
+  <h3>Hourly</h3>
+  <ul>
+    <li>
+      <h3>{hourlyQuery.data?.timezone}</h3>
+      <img src={iconhorly} alt="" />
+      <h3>{hourlyQuery.data?.daily[0].temp.day}</h3>
+    </li>
+  </ul>
+</div>
+</div>
+</div> */}
+
+
+
+/////////////////////
+import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import axios from 'axios';
+import { weatherConfig } from '../../data/weatherConfig';
+import styles from './Weather.module.css';
+import { WiHumidity, WiStrongWind, WiThermometer } from 'react-icons/wi';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+
+interface WeatherProps {
+  location: {
+    name: string;
+    localtime: string;
+  };
+  current: {
+    temp_c: number;
+    condition: {
+      text: string;
+      icon: string;
+      code: number;
+    };
+  };
+  wind_kph: number;
+  humidity: number;
+  feelslike_c: number;
+  gust_kph: number;
+}
+
+const Weather = () => {
+  const [weathers, setWeathers] = useState<WeatherProps | null>(null);
+
+  useEffect(() => {
+    const fetchCurrentWeather = async () => {
+      try {
+        const { data } = await axios.get(
+          `https://api.weatherapi.com/v1/current.json?key=${weatherConfig.apiKey}&q=Danang&aqi=no&lang=vi`
+        );
+        console.log(data);
+        setWeathers(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCurrentWeather();
+  }, []);
+
+  const icon = weathers?.current.condition.icon
+    ? `https:${weathers.current.condition.icon}`
+    : '';
+  return (
+    <div className='bg-slate-900 py-5'>
+      <div
+        style={{ maxWidth: 430, height: 600, overflowY: 'scroll' }}
+        className='device_wrapper bg-white mx-auto rounded'
+      >
+        <h1>Weather</h1>
+        {icon && <img src={icon} alt='Weather Icon' />}
+        <h2>{weathers?.current.temp_c} &#8451;</h2>
+        <p>{weathers?.current.condition.text}</p>
+      </div>
+    </div>
+  );
+};
+
+export default Weather;
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////29/09/////////////////////////////////
+import React, { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { weatherConfig } from '../../data/weatherConfig';
+import styles from './Weather.module.css';
+import { WiHumidity, WiStrongWind, WiThermometer } from 'react-icons/wi';
+import {FaSistrix} from 'react-icons/fa'
+import "swiper/css";
+import "swiper/css/pagination";
+import { Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+interface WeatherProps {
+  location: {
+    name: string;
+    localtime: string;
+    localtime_epoch: number;
+  };
+  current: {
+    temp_c: number;
+    condition: {
+      text: string;
+      icon: string;
+      code: number;
+    };
+    wind_kph: number;
+    humidity: number;
+    feelslike_c: number;
+    gust_kph: number;
+  };
+ 
+}
+
+interface HourlyDayProps {
+  forecast: {
+    forecastday: Forecastday[];
+  };
+}
+
+interface Forecastday {
+  date: string;
+  hour: Hours[];
+}
+interface Hours {
+  time_epoch: number;
+  time: string;
+  temp_c: number;
+  condition: {
+    icon: string;
+    code: number;
+    text: string;
+  };
+}
+
+const Weather = () => {
+  const { data, isLoading, isError, error } = useQuery<WeatherProps | null, Error>({
+    queryKey: ['weatherData'],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `https://api.weatherapi.com/v1/current.json?key=${weatherConfig.apiKey}&q=Danang&aqi=no`
+      );
+
+      return data;
+    },
+  });
+  console.log(data);
+
+  const { data: forecastData, isLoading: forecastLoading, isError: forecastError, error: forecastErrorMessage } = useQuery<
+    HourlyDayProps | null,
+    Error
+  >({
+    queryKey: ['forecastData'],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `https://api.weatherapi.com/v1/forecast.json?key=${weatherConfig.apiKey}&q=Danang&days=1&aqi=no&alerts=no`
+      );
+      return data;
+    },
+  });
+  console.log(forecastData);
+
+
+  const icon = data?.current.condition.icon ? `https:${data?.current.condition.icon}` : '';
+
+
+  const formatDateTime = (time_epoch: number) => {
+    const currentDate = new Date();
+    const targetDate = new Date(currentDate.getTime() + time_epoch * 1000);
+    return targetDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.scrollbar} id={styles.style_1}>
+        <div className={styles.force_overflow}></div>
+        <div className={styles.weather_wrapper}>
+          <div className={styles.header_item}>
+          <h2 className={styles.loca_name}>{data?.location.name}</h2>
+          <span><FaSistrix/></span>
+          </div>
+          <div className={styles.body_item}>
+
+            <div className={styles.content}>
+              <div className={styles.main_weath}>
+                <div className={styles.main_param}>
+                  <h2>{data?.current.temp_c.toFixed()}°</h2>
+                  <div className={styles.desc_weath}>
+                    <span><img src={icon} alt="" /></span>
+                    <p>{data?.current.condition.text}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+            <div className={styles.child_weath}>
+              <ul>
+                <li>
+                  <span className='text-3xl'><WiThermometer /></span>
+                  <span>{data?.current.feelslike_c.toFixed()} °C</span>
+                </li>
+                <li>
+                  <span className='text-3xl'><WiStrongWind /></span> 
+                  <span>{data?.current.wind_kph} kph</span>
+                </li>
+                <li>
+                  <span className='text-3xl'><WiHumidity /></span>
+                  <span>{data?.current.humidity} %</span>
+
+                </li>
+              </ul>
+            </div>
+          </div>
+          </div>
+
+          <div className={styles.footer_item}>
+            <h4>Thời tiết hôm nay</h4>
+
+            {forecastData && (
+              <Swiper
+                slidesPerView={4}
+                centeredSlides={false}
+                spaceBetween={10}
+                grabCursor={false}
+                pagination={false}
+                modules={[Pagination]}
+                className="mySwiper"
+              >
+                <div className={styles.swiper_item}>
+                  {forecastData.forecast.forecastday[0].hour.map((hour, index) => (
+                    <SwiperSlide key={index} className={styles.slider_item}>
+                      <div className={styles.forcast_item}>
+                        <div className={styles.head_item}>
+                          <p>{formatDateTime(hour.time_epoch)}</p>
+                        </div>
+                        <div className={styles.thumb_weath}>
+                          <img src={hour.condition.icon} alt={hour.condition.text} />
+                        </div>
+                        <div className={styles.btm_temp}>
+                          <p className='font-bold'>{hour.temp_c.toFixed()}°C</p>
+                        </div>
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </div>
+              </Swiper>
+            )}
+
+
+          </div>
+          
+          <div className={styles.next_day}>
+            <button>Dự báo 5 ngày tới</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Weather;

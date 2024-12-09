@@ -1,0 +1,78 @@
+body{
+    background-color: black;
+}
+
+.container{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.search_wrapper{
+    max-width: 430px;
+    height: 600px;
+    background-image: url('../../../public/images/bg_weather_night.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0 auto;
+    overflow-x: hidden;
+    padding: 10px;
+    border-radius: 30px;
+}
+.search_wrapper::-webkit-scrollbar{
+    width: 6px;
+    background-color: #4e4c4c;
+}
+
+.header_item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 5px;
+    color: #fff;
+}
+
+.header_item h2{
+    font-size: 20px;
+    font-weight: 500;
+    display: flex;
+}
+.search_input{
+    margin-bottom: 30px;
+}
+.content{
+    margin: 10px;
+    border: 1px solid rgb(121, 118, 118);
+    border-radius: 20px;
+    background-color: rgb(201, 201, 201);
+    opacity: 0.8;
+    box-shadow: rgba(255, 255, 255, 0.845) 0px 3px 8px;
+}
+.content .card_item{
+    padding: 5px 15px;
+}
+.card_item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card_item .card_left h3{
+    font-size: 18px;
+    font-weight: 500;
+    color: black;
+}
+
+.card_item .title{
+    display: flex;
+    column-gap: 10px;
+}
+
+.card_item .card_right h3{
+    font-size: 30px;
+    font-weight: 600;
+}
+
+
+
